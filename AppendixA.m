@@ -12,9 +12,9 @@
 
 % INSTRUCTIONS for user: 
 % (1) Create an 'Icarus' directory at: /Users/<username>/ e.g., /Users/<username>/Icarus/ and modify the path names below: 
-addpath /Users/charlotteb/Icarus/
-inDir = '/Users/charlotteb/Icarus/inFiles/';
-outDir ='/Users/charlotteb/Icarus/outFiles/';
+addpath /Users/<user>/Icarus/
+inDir = '/Users/<user>/Icarus/inFiles/';
+outDir = '/Users/<user>/Icarus/outFiles/';
 
 % (2) Save this script (AppendixA.m) in the main directory: /Users/<username>/Icarus/  
 
