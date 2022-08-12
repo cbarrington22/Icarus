@@ -73,7 +73,8 @@ lAw = 315.6; % Lower wavelength limit
 uAw = 326.8; % Upper wavelength limit 
 figure('Renderer', 'painters', 'Position', [900 900 900 600]) % Plots Hg-spectrum 
 dp = plot(wHg, iHg); hold on; dp.LineWidth = 1;
-xlim([min(wHg) max(wHg)]);
+xlim([min(wHg) max(wHg)]); xtickn = (280:10:420); xticks(xtickn);
+set(gca,'XMinorTick','on'); 
 dp = xline(lAw, '-k'); dp.LineWidth = 1; % Places vertical line at lower wavelength range of analysis window 
 dp = xline(uAw, '-k'); dp.LineWidth = 1; % Places vertical line at upper wavelength range of analysis window 
 xlabel('\lambda (nm)'); ylabel('Intensity (counts)');
