@@ -150,7 +150,7 @@ legend({'SO_2','O_3', 'Solar reference', 'Wavelength range of analysis window'},
 % SAVES MODIFIED ABSORPTION CROSS SECTIONS AND SOLAR REFERENCE 
 fnOut = 'AppendixA';
 fname = fullfile(outDir, fnOut);
-save(fname,'cSO2', 'cO3', 'cSolar', 'wHg'); % Saves (i) SO2, (ii) O3, (iii) solar reference and (iv) wavelength information for (i to iii) 
+save(fname,'cSO2', 'cO3', 'cSolar', 'wHg', 'lAw', 'uAw'); % Saves (i) SO2, (ii) O3, (iii) solar reference and (iv) wavelength information for (i to iii) as well as the upper and lower wavelength ranegs of the analysis window
 
 fprintf('Modified absoprtion cross sections and solar reference saved in %s\n', outDir); % Displays message to user 
 
