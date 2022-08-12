@@ -11,3 +11,5 @@ Contents:
 (1) Appendix A: Preparation of trace gas absorption cross sections and solar reference
 
 (2) Appendix B: Preparation of trace gas cross sections and solar reference for inclusion in design matrix
+
+All codes are written in MATLAB R2021a (MathWorks, 2021)
