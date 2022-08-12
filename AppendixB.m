@@ -12,8 +12,8 @@
 % INSTRUCTIONS for user: 
 % NOTE: users who have run AppendixA.m may skip ahead to step (3).
 % (1) Create an 'Icarus' directory at: /Users/<username>/ e.g., /Users/<username>/Icarus/ and modify the path names below: 
-addpath /Users/charlotteb/Icarus/
-outDir ='/Users/charlotteb/Icarus/outFiles/';
+addpath /Users/<user>/Icarus/
+outDir = '/Users/<user>/Icarus/outFiles/';
 
 % (2) If you have not used AppendixA.m to prepare trace gas cross sections and solar reference, please add a .mat file with the name 'AppendixA' to outDir which contains the following variables: 
 % (a) 'cSO2'absorption cross section of SO2 which matches the wavelength range and Instrument Line Shape (ILS) of the spectrometer used to record the measurement spectra to be analysed
