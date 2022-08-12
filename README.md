@@ -12,4 +12,4 @@ Contents:
 
 (2) Appendix B: Preparation of trace gas cross sections and solar reference for inclusion in design matrix
 
-All codes are written in MATLAB R2021a (MathWorks, 2021)
+All codes are written in MATLAB R2021a (MathWorks, 2021).
