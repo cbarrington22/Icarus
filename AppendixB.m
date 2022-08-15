@@ -1,6 +1,6 @@
 % Icarus: exploIting the frequenCy signature of trace gAs absoRption in Uv-Spectra
 
-% Appendix B: Preparation of trace gas cross sections and solar reference for design matrix G
+% Appendix B: Converting prepared trace gas absorption cross sections for use in the linear model
 
 % This code forms part of the supplementary material in the following paper: 'Barrington et al., Exploiting the frequency signature of trace gas absorption: A new model to quantify SO2 from UV spectra of volcanic plumes'.
 
