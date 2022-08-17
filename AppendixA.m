@@ -1,6 +1,6 @@
 % Icarus: exploIting the frequenCy signature of trace gAs absoRption in Uv-Spectra
  
-% Appendix A: Preparation of the solar reference (I_0), SO2 and O3 trace gas absorption cross sections (œÉ_so2, œÉ_o3) and Ring spectrum (Ring)
+% Appendix A: Preparation of the solar reference (I_0), SO2 and O3 trace gas absorption cross sections (σ_so2, σ_o3) and Ring spectrum (Ring)
  
 % This code is provided as part of the following paper: 'Barrington et al., Exploiting the frequency signature of trace gas absorption: A new model to quantify SO2 from UV spectra of volcanic plumes'
  
@@ -44,7 +44,7 @@ fnHg = 'FLMS195681__0__12-14-16-726.txt'; % Hg spectrum
  
 % (6) Run code 
  
-% (7) Find the solar reference (I_0), SO2 and O3 trace gas absorption cross sections (œÉ_so2, œÉ_o3) and Ring spectrum (Ring) saved as .mat file in: '/Users/<user>/Icarus/outFiles/' and figures in /Users/<user>/Icarus/outFiles/Figures/
+% (7) Find the solar reference (I_0), SO2 and O3 trace gas absorption cross sections (σ_so2, σ_o3) and Ring spectrum (Ring) saved as .mat file in: '/Users/<user>/Icarus/outFiles/' and figures in /Users/<user>/Icarus/outFiles/Figures/
  
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NOT INTENDED TO BE MODIFIED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -207,7 +207,7 @@ fname = fullfile(outDir, fnOut);
  
 solar = cSolar; SO2 = cSO2; O3 = cO3; ring = cRing; % Re-defines variable names for saving 
  
-save(fname,'SO2', 'O3', 'solar', 'ring', 'wHg', 'lAw', 'uAw', 'hlines', 'l', 'h', 'kx'); % Saves I_0, œÉ_so2, œÉ_o3 and Ring as well as wavelength information, lower and upper wavelength range of the analysis window, number of header lines, wavelengths 
+save(fname,'SO2', 'O3', 'solar', 'ring', 'wHg', 'lAw', 'uAw', 'hlines', 'l', 'h', 'kx'); % Saves I_0, σ_so2, σ_o3 and Ring as well as wavelength information, lower and upper wavelength range of the analysis window, number of header lines, wavelengths 
 % used to produce kx and kx
  
 fprintf('Modified absorption cross sections and solar reference saved in %s\n', outDir); % Displays message to user 
