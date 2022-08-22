@@ -12,12 +12,9 @@
 % INSTRUCTIONS for user: 
 % NOTE: users who have run AppendixA.m may skip ahead to step (3).
 % (1) Create an 'Icarus' directory at: /Users/<username>/ e.g., /Users/<username>/Icarus/ and modify the path names below: 
-% addpath /Users/charlotteb/Icarus/
-addpath '/Users/charlotteb/Desktop/Frontiers SIRS manuscript submission/'
-% dir = '/Users/charlotteb/Icarus/';
-dir = '/Users/charlotteb/Desktop/Frontiers SIRS manuscript submission/Code (Github)/Icarus/';
-% inDir = '/Users/charlotteb/Icarus/inFiles/';
-inDir = '/Users/charlotteb/Desktop/Frontiers SIRS manuscript submission/Code (Github)/Icarus/inFiles/';
+addpath /Users/<user>/Icarus/
+dir = '/Users/<user>/Icarus/';
+inDir = '/Users/<user>/Icarus/inFiles/';
  
 % (2) If you have not used AppendixA.m to prepare trace gas cross sections and solar reference, please add a .mat file named 'AppendixA' to the path '/Users/charlotteb/Icarus/inFiles/' which contains the following variables: 
     % (a) 'solar' - solar reference which matches the wavelength range and Instrument Line Shape (ILS) of the spectrometer used to record the measurement spectra to be analysed (I_0)
