@@ -184,7 +184,10 @@ title('Ring prime')
 fnOut = 'G.png';
 fname = fullfile(outDirFig, fnOut);
 saveas(gcf, fname)
- 
+
+% SAVES CWT WITHIN ANALYSIS WINDOW (USED FOR ERROR ANALYSIS WITH BOOTSTRAP APPROACH) 
+solarBS = wtsolar; SO2BS = wtSO2; O3BS = wtO3; ringBS = wtring;
+
 fprintf('Analysis window extracted. Vectorising CWT data ready for incorporation in design matrix (G)\n'); % Displays message to user 
  
 % VECTORISES
@@ -204,9 +207,9 @@ Gt = G'; % Transpose of G
 % SAVES MODIFIED ABSORPTION CROSS SECTIONS AND SOLAR REFERENCE 
 fnOut = 'AppendixB';
 fname = fullfile(outDir, fnOut);
-save(fname,'wtsolar', 'wtSO2', 'wtO3', 'wtring', 'wHgOrig', 'wHg', 'Forig', 'F', 'Fs', 'lAw', 'uAw', 'F1Aw', 'F2Aw', 'idxCoi', 'idxF1Aw', 'idxF2Aw', 'idxWlAw', 'idxWuAw', 'G', 'Gt'); % Saves I_0', σ_so2', σ_o3' and Ring', wavelength 
-% and frequency information (both original and analysis window), sampling frequency (Fs), range of the analysis window limits and indices (both wavelength and frequency) and the COI index, together with G, the transpose of G (Gt) as .mat file in: 
-% '/Users/<user>/Icarus/outFiles/' and figures in /Users/<user>/Icarus/outFiles/Figures/
+save(fname,'wtsolar', 'wtSO2', 'wtO3', 'wtring', 'wHgOrig', 'wHg', 'Forig', 'F', 'Fs', 'lAw', 'uAw', 'F1Aw', 'F2Aw', 'idxCoi', 'idxF1Aw', 'idxF2Aw', 'idxWlAw', 'idxWuAw', 'G', 'Gt', ); % Saves I_0', σ_so2', σ_o3' and Ring', wavelength 
+% and frequency information (both original and analysis window), sampling frequency (Fs), range of the analysis window limits and indices (both wavelength and frequency) and the COI index, together with G, the transpose of G (Gt) 
+% and the non-vectorised variables used for error analysis as .mat file in: '/Users/<user>/Icarus/outFiles/' and figures in /Users/<user>/Icarus/outFiles/Figures/
  
 fprintf('Design matrix (G) and associated variables saved in %s\n', outDir); % Displays message to user 
  
