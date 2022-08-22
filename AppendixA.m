@@ -12,12 +12,9 @@
  
 % INSTRUCTIONS for user: 
 % (1) Create an 'Icarus' directory at: /Users/<username>/ e.g., /Users/<username>/Icarus/ and modify the path names below: 
-% addpath /Users/charlotteb/Icarus/
-addpath '/Users/charlotteb/Desktop/Frontiers SIRS manuscript submission/'
-% dir = '/Users/charlotteb/Icarus/';
-dir = '/Users/charlotteb/Desktop/Frontiers SIRS manuscript submission/Code (Github)/Icarus/';
-% inDir = '/Users/charlotteb/Icarus/inFiles/';
-inDir = '/Users/charlotteb/Desktop/Frontiers SIRS manuscript submission/Code (Github)/Icarus/inFiles/';
+addpath /Users/<user>/Icarus/
+dir = '/Users/<user>/Icarus/';
+inDir = '/Users/<user>/Icarus/inFiles/';
  
 % (2) Save this script (AppendixA.m) in the main directory: /Users/<username>/Icarus/  
  
