@@ -207,7 +207,7 @@ fname = fullfile(outDir, fnOut);
  
 solar = cSolar; SO2 = cSO2; O3 = cO3; ring = cRing; % Re-defines variable names for saving 
  
-save(fname,'SO2', 'O3', 'solar', 'ring', 'wHg', 'lAw', 'uAw', 'hlines', 'l', 'h', 'kx'); % Saves I_0, σ_so2, σ_o3 and Ring as well as wavelength information, lower and upper wavelength range of the analysis window, number of header lines, wavelengths 
+save(fname,'SO2', 'O3', 'solar', 'ring', 'wHg', 'lAw', 'uAw', 'hlines', 'ind', 'l', 'h', 'kx'); % Saves I_0, σ_so2, σ_o3 and Ring as well as wavelength information, lower and upper wavelength range of the analysis window, number of header lines, index for wavelengths used, wavelengths 
 % used to produce kx and kx
  
 fprintf('Modified absorption cross sections and solar reference saved in %s\n', outDir); % Displays message to user 
