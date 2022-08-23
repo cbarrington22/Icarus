@@ -37,6 +37,9 @@ inDir = '/Users/<user>/Icarus/inFiles/';
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NOT INTENDED TO BE MODIFIED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
+% Turns of warnings 
+warning('off','MATLAB:MKDIR:DirectoryExists') 
+
 fprintf('Creating output directory..\n'); % Displays message to user 
  
 % Creates output directories
