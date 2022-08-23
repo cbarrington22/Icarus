@@ -46,7 +46,7 @@ fnHg = 'FLMS195681__0__12-14-16-726.txt'; % Hg spectrum
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NOT INTENDED TO BE MODIFIED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
-% Turns of warnings 
+% Turns off warnings 
 warning('off','MATLAB:MKDIR:DirectoryExists') 
  
 fprintf('Creating output directory..\n'); % Displays message to user 
