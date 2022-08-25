@@ -11,4 +11,7 @@ Contents:
 
 (2) Appendix B: Converting prepared solar reference (I_0), trace gas absorption cross sections (σ_so2, σ_o3) and Ring spectrum (Ring) to spatial frequency (I_0', σ_so2', σ_o3' and Ring') for use in the linear model
 
+(3) comvolute.m is a function to convolute high resolution trace gas absorption cross sections to match the lower optical resolution of the spectrometer used to record a Hg-spectrum 
+
+
 All codes are written in MATLAB R2021a (MathWorks, 2021).
