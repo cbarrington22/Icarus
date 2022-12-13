@@ -14,9 +14,9 @@
  
 % INSTRUCTIONS for user: 
 % (1) Create an 'Icarus' directory at: /Users/<username>/ e.g., /Users/<username>/Icarus/ and modify the path names below: 
-addpath /Users/<username>/Icarus/  
-dir = '/Users/<username>/Icarus/';
-inDir = '/Users/<username>/Icarus/inFiles/';
+% addpath /Users/<username>/Icarus/  
+% dir = '/Users/<username>/Icarus/';
+% inDir = '/Users/<username>/Icarus/inFiles/';
  
 % (2) Save this script (AppendixA.m) in the main directory: /Users/<username>/Icarus/  
  
@@ -78,16 +78,15 @@ else
    [wHg, iHg] = textread(inHg,'%f %f'); 
 end  
  
-fprintf('Files loaded. Now resampling data according to wavelength information in Hg spectrum..\n'); % Displays message to user 
+fprintf('Files loaded. Define data kernel..\n'); % Displays message to user 
  
-% DEFINES DATA KERNAL k(x) 
+% DEFINES DATA KERNEL k(x) 
 figure('Renderer', 'painters', 'Position', [900 900 900 600]) % Plots Hg-spectrum 
 title('Hg-spectrum'); 
 dp = plot(wHg, iHg); hold on; dp.LineWidth = 1;
 xlim([min(wHg) max(wHg)]); xtickn = (290:20:420); xticks(xtickn);
 set(gca,'XMinorTick','on'); 
 xlabel('\lambda (nm)'); ylabel('Intensity (counts)');
-legend({'Recorded Hg-spectrum','Wavelength range of analysis window'},'FontSize',14);  
 Fig = gca; Fig.FontSize = 14; set(gcf,'color','w');
 xlim([280 420]);
 pL = sprintf('Select a single peak of the Hg-spectrum to be used for the data kernel.\n Select a peak which is not saturated but in close proximity to the analysis window.\n Input the x-axis value corresponding to the start of the selected Hg-peak (l):\n');
@@ -112,11 +111,7 @@ xlim([min(sxW) max(sxW)])
 xlabel('\lambda (nm)'); ylabel('Normalised s(x)');
 Fig = gca; Fig.FontSize = 14; set(gcf,'color','w');
 
-% CONVOLUTION 
-CSolar = conv(aSolar, kx, 'same'); 
-cSO2 = conv(aSO2, kx, 'same'); 
-cO3 = conv(aO3, kx, 'same'); 
-cRing = conv(aRing, kx, 'same'); 
+fprintf('Convoluting trace gas absorption cross sections..\n'); % Displays message to user 
 
 % RESAMPLING 
 % Checks if lambda is defined in the workspace 
@@ -124,10 +119,32 @@ if exist('lambda','var') == 1
 else 
     lambda = wHg; % If lambda is not defined by the user, trace gas cross sections and reference spectra are resampled to the wavelength range of the Hg-spectrum
 end 
-I0 = interp1(wSolar, cSolar, lambda,'linear'); 
+% CONVOLUTION OF TRACE GAS CROSS SECTIONS
+cSO2 = conv(aSO2, kx, 'same'); 
+cO3 = conv(aO3, kx, 'same'); 
+cBRO = conv(aBRO, kx, 'same');
+cO4 = conv(aO4, kx, 'same');
+cNO2 = conv(aNO2, kx, 'same');
+cOCLO = conv(aOCLO, kx, 'same');
+cCH2O = conv(aCH2O, kx, 'same');
+fprintf('Resampling convoluted cross sections ..\n'); % Displays message to user 
+% RESAMPLING OF TRACE GAS CROSS SECTIONS 
 SO2 = interp1(wSO2, cSO2, lambda,'linear'); 
 O3 = interp1(wO3, cO3, lambda,'linear'); 
-Ring = interp1(wRing, cRing, lambda,'linear'); 
+BRO = interp1(wBRO, cBRO, lambda,'linear'); 
+O4 = interp1(wO4, cO4, lambda,'linear'); 
+NO2 = interp1(wNO2, cNO2, lambda,'linear'); 
+OCLO = interp1(wOCLO, cOCLO, lambda,'linear'); 
+CH2O = interp1(wCH2O, cCH2O, lambda,'linear'); 
+fprintf('Convoluting and resampling high resolution solar reference and Ring spectrum..\n'); % Displays message to user 
+% RESAMPLING OF HIGH RESOLUTION SOLAR REFERENCE (AND RING)
+solar = interp1(wSolar, aSolar, lambda,'linear'); 
+csolar = conv(solar, kx, 'same');
+Ring = interp1(wRing, aRing, lambda,'linear'); 
+cRing = conv(Ring, kx, 'same');
+% CHANGES VARIABLE NAME 
+I0 = csolar; 
+Ring = cRing; 
 
 % PLOTS I0, SO2, O3 AND RING 
 figure
@@ -165,7 +182,7 @@ fnOut = 'AppendixA';
 fname = fullfile(outDir, fnOut);
 save(fname, 'fnHg', 'fnSolar', 'I0', 'fnSO2', 'SO2', 'fnO3', 'O3', 'fnRing' , 'Ring', 'lambda', 'kx'); 
 
-fprintf('Modified absorption cross sections and solar reference saved in %s\n', outDir); % Displays message to user 
+fprintf('Convoluted trace gas cross sections and reference spectra saved in %s\n', outDir); % Displays message to user 
  
 % clearvars 
  
