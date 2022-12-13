@@ -20,7 +20,7 @@
  
 % (2) Save this script (AppendixA.m) in the main directory: /Users/<username>/Icarus/  
  
-% (3) Create a folder within the main directory, called 'inFile' e.g., /Users/<username>/Icarus/inFile and /Users/<username>/Icarus/inFile 
+% (3) Create a folder within the main directory, called 'inFiles' e.g., /Users/<username>/Icarus/inFile and /Users/<username>/Icarus/inFile 
  
 % (4) Place the following files inside the 'inFile' which was created in step 4: 
 % High resolution solar reference 
