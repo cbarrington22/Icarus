@@ -1,6 +1,6 @@
 % Icarus: exploIting the frequenCy signature of trace gAs absoRption in Uv-Spectra
  
-% (Appendix A) Appendix B: Steps for assembling the design matrix G
+% Appendix A: Convolution of reference spectra and trace gas cross sections 
 
 % This code is provided as part of Chapter 2 of the thesis 'Using Volcanic Gases to Understand Open-vent Volcanoes' submitted to the Nanyang Technological University
 % in partial fulfillment of the requirements for the degree of Doctor of Philosophy. 
@@ -9,144 +9,181 @@
  
 % DESCRIPTION of code: 
 
-% This code assembles design matrix G from I0, SO2, O3, Ring and Bshift (followng AppendixA.m and shiftSpectrum.m)
+% This code uses a Hg spectrum which contains correct wavelength information to resample and convolute (i) a high-resolution solar reference and absorption cross sections for (iI) SO2 and (iii) O3 taken from the literature as 
+% well as (iv) a Ring spectrum. 
  
 % INSTRUCTIONS for user: 
-% (1) This script follows on from AppendixA.m and will load the variables saved in AppendixA.mat
-inDir = '/Users/<username>/Icarus/outFiles/';
-
-% (2) In addition, the uthe Bshift spectrum returned from running shiftSpectrum.m should be saved within AppendixA.mat
-
-% (3) Define the wavelength range over which the CWT will be computed 
-l = min(lambda); % lower wavelength limit  
-h = max(lambda); % upper wavelength limit 
-% IMPORTANT: If the measurement spectrum (which will form d) has negative intensity counts in this wavelength range, and error will occur when computing the CWT
-
-% (4) Define analysis window to be used for the lienar model:
-% Wavelength range (AW1 as default): 
-AW_L = 310; % Low 
-AW_H = 340; % High 
-% Spatial frequency range (default for Fs = 0.0700):
-AW_Ft = 0.01; % Highest 
-AW_Fb = 0.0015; % Lowest 
-% IMPORTANT: Spatial frequency will depend on the resolution of the measured spectra and may require the user to plot d and SO2 prime first in order to select the appropriate spatial frequency range 
+% (1) Create an 'Icarus' directory at: /Users/<username>/ e.g., /Users/<username>/Icarus/ and modify the path names below: 
+% addpath /Users/<username>/Icarus/  
+% dir = '/Users/<username>/Icarus/';
+% inDir = '/Users/<username>/Icarus/inFiles/';
  
-% (5) Run code 
+% (2) Save this script (AppendixA.m) in the main directory: /Users/<username>/Icarus/  
  
-% (6) Find deisgn matrix (G) for both the real and complex magnitude saved as .mat file in: '/Users/<user>/Icarus/outFiles/designMatrix/'
+% (3) Create a folder within the main directory, called 'inFiles' e.g., /Users/<username>/Icarus/inFile and /Users/<username>/Icarus/inFile 
+ 
+% (4) Place the following files inside the 'inFiles' which was created in step 3: 
+% High resolution solar reference 
+% SO2 absorption cross section 
+% O3 absorption cross section 
+% Ring spectrum
+% Hg spectrum 
+
+% IMPORTANT: 
+% As default, convoluted trace gas cross sections and reference spectra are resampled to the wavelength range of the Hg-spectrum. 
+% If the user wishes to resample to an alternative wavelength range, define lambda below 
+% All files should be in '.txt' format and contain wavelength information in the 
+% first column (in nm) and intensity (for the solar reference, Ring and Hg spectra) OR absorption (for cross sections for SO2 and O3) in the second. It is assumed that the .txt files do not contain header or footer lines except 
+% for the Hg spectrum. Since this should be measured, it is expected that the .txt file will contain header lines. Please change 'hlines' according to reflect the number of header lines contained in the Hg spectrum .txt file. 
+hlines = 14; % If there are no header lines enter '0'
+% lambda = <wavelength>; 
+ 
+% (5) Change the file names below to reflect the file names placed inside 'inFiles': 
+fnSolar = 'solar_ChanceKurucz_2010_vac.txt'; % Solar reference
+fnSO2 = 'SO2_Bogumil_2003_293K_vac.txt'; % SO2 absorption cross section
+fnO3 = 'O3_Gorshelev_2014_243K_vac.txt'; % O3 absorption cross section
+fnRing = 'Ring_solar_ChanceKurucz_2010_unk.txt'; % Ring spectrum
+fnHg = 'FLMS195681__0__12-14-16-726.txt'; % Hg spectrum 
+ 
+% (6) Run code 
+ 
+% (7) Find the solar reference (I_0), SO2 and O3 trace gas absorption cross sections (σ_so2, σ_o3) and Ring spectrum (Ring) saved as .mat file in: '/Users/<user>/Icarus/outFiles/' and figures in /Users/<user>/Icarus/outFiles/Figures/
+ 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NOT INTENDED TO BE MODIFIED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Turns off warnings 
+warning('off','MATLAB:MKDIR:DirectoryExists') 
+ 
+fprintf('Creating output directory..\n'); % Displays message to user 
+ 
 % Creates output directories
-fnOut1 = 'designMatrix'; fname = fullfile(inDir, fnOut1); mkdir(fname)
-str1 = 'designMatrix/'; outDir = [dir str1]; 
+fnOut1 = 'outFiles'; fname = fullfile(dir, fnOut1); mkdir(fname)
+str1 = 'outFiles/'; outDir = [dir str1]; 
+fnOut2 = 'Figures'; fname = fullfile(outDir, fnOut2); mkdir(fname); 
+str2 = 'Figures/'; outDirFig = [outDir str2]; 
+ 
+fprintf('Loading files from %s..\n', inDir); % Displays message to user 
+ 
+% DEFINES WAVELENGTH AND INTENSITY/ABSORPTION 
+% Defines file directory, converts to character array and loads both wavelength and intensity/absorption data into the workspace 
+dSolar = fullfile(inDir, fnSolar); inSolar = char(dSolar); [wSolar, aSolar] = textread(inSolar,'%f %f'); % Solar reference
+dSO2 = fullfile(inDir, fnSO2); inSO2 = char(dSO2); [wSO2, aSO2] = textread(inSO2,'%f %f'); % SO2 absorption cross section
+dO3 = fullfile(inDir, fnO3); inO3 = char(dO3); [wO3, aO3] = textread(inO3,'%f %f'); % O3 absorption cross section
+dRing = fullfile(inDir, fnRing); inRing = char(dRing); [wRing, aRing] = textread(inRing,'%f %f'); % Ring spectrum
+dHg = fullfile(inDir, fnHg); inHg = char(dHg); % Hg spectrum 
+if hlines >= 1
+   [wHg, iHg] = textread(inHg,'%f %f', 'headerlines', hlines); % Skips header lines if exist 
+else
+   [wHg, iHg] = textread(inHg,'%f %f'); 
+end  
+ 
+fprintf('Files loaded. Define data kernel..\n'); % Displays message to user 
+ 
+% DEFINES DATA KERNEL k(x) 
+figure('Renderer', 'painters', 'Position', [900 900 900 600]) % Plots Hg-spectrum 
+title('Hg-spectrum'); 
+dp = plot(wHg, iHg); hold on; dp.LineWidth = 1;
+xlim([min(wHg) max(wHg)]); xtickn = (290:20:420); xticks(xtickn);
+set(gca,'XMinorTick','on'); 
+xlabel('\lambda (nm)'); ylabel('Intensity (counts)');
+Fig = gca; Fig.FontSize = 14; set(gcf,'color','w');
+xlim([280 420]);
+pL = sprintf('Select a single peak of the Hg-spectrum to be used for the data kernel.\n Select a peak which is not saturated but in close proximity to the analysis window.\n Input the x-axis value corresponding to the start of the selected Hg-peak (l):\n');
+l = input(pL); % e.g., 296.17
+pH = sprintf('Input the x-axis value corresponding to the end of the selected Hg-peak (h):\n');
+h = input(pH); % e.g., 297.73; 
+dp = xline(l,'-r'); dp.LineWidth = 0.5;
+dp = xline(h, '-r'); dp.LineWidth = 0.5;
+% Extracts data s(x) 
+[rI, ~] = find(wHg > l&wHg < h); % Returns index of wavelengths between defined limits l and h
+sxW = wHg(rI, :); % Extracts wavelength data for kernel 
+sxI = iHg(rI, :); % Extracts intensity data for kernel 
+% Plots data kernel s(x)
+figure('Renderer','painters','Position',[900 900 900 600]) 
+title('Convolution data kernel k(x)'); 
+[smin, ~] = min(sxI);
+sxISmin = sxI - smin;
+kx = sxISmin/(trapz(sxISmin)); 
+dp = plot(sxW, kx); hold on; dp.LineWidth = 1;
+xtickn = (290:0.5:420); xticks(xtickn);
+xlim([min(sxW) max(sxW)])
+xlabel('\lambda (nm)'); ylabel('Normalised s(x)');
+Fig = gca; Fig.FontSize = 14; set(gcf,'color','w');
 
-% EXTRACTS WAVELENGTHS 
-[rI, ~] = find(lambda > l & lambda < h); 
-lambda = lambda(rI,:); 
-I0 = I0(rI,:); 
-SO2 = SO2(rI,:); 
-O3 = O3(rI,:); 
-Ring = Ring(rI,:); 
-Bshift = Bshift(rI,:); 
-% Defines Fs
-chnls = length(lambda); % Number of spectrometer channels  
-minlambda = min(lambda); % Starting wavelength 
-maxlambda = max(lambda); % Final wavelength 
-rangeW = maxlambda - minlambda; % Determines wavelength range of spectrometer 
-Fs = rangeW/chnls; % Fs is the sampling rate in wav
+fprintf('Convoluting trace gas absorption cross sections..\n'); % Displays message to user 
 
-% APPLIES LOG OR NEGATIVE 
-I0 = log(I0); % ln 
-SO2 = -(SO2); % Negative 
-O3 = -(O3); % Negative 
+% RESAMPLING 
+% Checks if lambda is defined in the workspace 
+if exist('lambda','var') == 1
+else 
+    lambda = wHg; % If lambda is not defined by the user, trace gas cross sections and reference spectra are resampled to the wavelength range of the Hg-spectrum
+end 
+% CONVOLUTION OF TRACE GAS CROSS SECTIONS
+cSO2 = conv(aSO2, kx, 'same'); 
+cO3 = conv(aO3, kx, 'same'); 
+cBRO = conv(aBRO, kx, 'same');
+cO4 = conv(aO4, kx, 'same');
+cNO2 = conv(aNO2, kx, 'same');
+cOCLO = conv(aOCLO, kx, 'same');
+cCH2O = conv(aCH2O, kx, 'same');
+fprintf('Resampling convoluted cross sections ..\n'); % Displays message to user 
+% RESAMPLING OF TRACE GAS CROSS SECTIONS 
+SO2 = interp1(wSO2, cSO2, lambda,'linear'); 
+O3 = interp1(wO3, cO3, lambda,'linear'); 
+BRO = interp1(wBRO, cBRO, lambda,'linear'); 
+O4 = interp1(wO4, cO4, lambda,'linear'); 
+NO2 = interp1(wNO2, cNO2, lambda,'linear'); 
+OCLO = interp1(wOCLO, cOCLO, lambda,'linear'); 
+CH2O = interp1(wCH2O, cCH2O, lambda,'linear'); 
+fprintf('Convoluting and resampling high resolution solar reference and Ring spectrum..\n'); % Displays message to user 
+% RESAMPLING OF HIGH RESOLUTION SOLAR REFERENCE (AND RING)
+solar = interp1(wSolar, aSolar, lambda,'linear'); 
+csolar = conv(solar, kx, 'same');
+Ring = interp1(wRing, aRing, lambda,'linear'); 
+cRing = conv(Ring, kx, 'same');
+% CHANGES VARIABLE NAME 
+I0 = csolar; 
+Ring = cRing; 
 
-% CWT 
-[WT_I0, F, COI] = cwt(I0, Fs); 
-[WT_SO2, ~, ~] = cwt(SO2, Fs); 
-[WT_O3, ~, ~] = cwt(O3, Fs); 
-[WT_Ring, ~, ~] = cwt(Ring, Fs); 
-[WT_Bshift, ~, ~] = cwt(Bshift, Fs); 
-% REMOVES COI
-szCoi = length(COI); szF = length(F); matF = repelem(F, 1, szCoi); colCoi = COI'; matCoi = repelem(colCoi, szF, 1); idxCoi = matF <= matCoi; % Removes COI
-WT_I0(idxCoi) = NaN; 
-WT_SO2(idxCoi) = NaN; 
-WT_O3(idxCoi) = NaN; 
-WT_Ring(idxCoi) = NaN; 
-WT_Bshift(idxCoi) = NaN; 
+% PLOTS I0, SO2, O3 AND RING 
+figure
+subplot(2,2,1)
+plot(lambda, I0, '-r'); hold on; 
+ylabel('Intensity')
+xlabel('\lambda (nm)'); 
+xlim([280 420]);
+Fig = gca; Fig.Box = 'on'; Fig.FontSize = 14; set(gcf,'color','w');
+subplot(2,2,2)
+plot(lambda, SO2, '-r'); hold on; 
+ylabel('Mean absoprtion (cm^2/molec)'); 
+xlabel('\lambda (nm)'); 
+xlim([280 420]);
+Fig = gca; Fig.Box = 'on'; Fig.FontSize = 14; set(gcf,'color','w');
+subplot(2,2,3)
+plot(lambda, O3, '-r'); hold on; 
+ylabel('Mean absoprtion (cm^2/molec)'); 
+xlabel('\lambda (nm)'); 
+xlim([280 420]);
+Fig = gca; Fig.Box = 'on'; Fig.FontSize = 14; set(gcf,'color','w');
+subplot(2,2,4)
+plot(lambda, Ring, '-r'); hold on; 
+ylabel('Intensity')
+xlabel('\lambda (nm)'); 
+xlim([280 420]);
+Fig = gca; Fig.Box = 'on'; Fig.FontSize = 14; set(gcf,'color','w');
+% Saves figure 
+fnOut = 'Output.png';
+fname = fullfile(outDirFig, fnOut);
+saveas(gcf, fname)
 
-% DEFINES ANALYSIS WINDOW 
-% WAVELENGTH 
-[~, idxL]= min(abs(lambda-AW_L));
-wavL = lambda(idxL); % Low wavelength limit of AW
-[~, idxH]= min(abs(lambda-AW_H));
-wavH = lambda(idxH);  % High wavelength limit of AW
-% SPATIAL FREQUENCY 
-[~, idxFt]= min(abs(F-AW_Ft));
-Ft = F(idxFt); % Low wavelength limit of AW
-[~, idxFb]= min(abs(F-AW_Fb));
-Fb = F(idxFb);  % High wavelength limit of AW
+% SAVES MODIFIED ABSORPTION CROSS SECTIONS AND SOLAR REFERENCE 
+fnOut = 'AppendixA';
+fname = fullfile(outDir, fnOut);
+save(fname, 'fnHg', 'fnSolar', 'I0', 'fnSO2', 'SO2', 'fnO3', 'O3', 'fnRing' , 'Ring', 'lambda', 'kx'); 
 
-% EXTRACTS ANALYSIS WINDOW 
-F = F(idxFt:idxFb);
-lambda = lambda(idxL:idxH);
-WT_I0 = WT_I0(idxFt:idxFb, idxL:idxH);
-WT_SO2 = WT_SO2(idxFt:idxFb, idxL:idxH);
-WT_O3 = WT_O3(idxFt:idxFb, idxL:idxH);
-WT_Ring = WT_Ring(idxFt:idxFb, idxL:idxH);
-WT_Bshift = WT_Bshift(idxFt:idxFb, idxL:idxH);
-
-% DEFINES REAL AND IMAGINARY PARTS OF CWT 
-WT_I0_real  = real(WT_I0); 
-WT_I0_imag  = imag(WT_I0); 
-WT_SO2_real  = real(WT_SO2); 
-WT_SO2_imag  = imag(WT_SO2); 
-WT_O3_real  = real(WT_O3); 
-WT_O3_imag  = imag(WT_O3); 
-WT_Ring_real  = real(WT_Ring); 
-WT_Ring_imag  = imag(WT_Ring); 
-WT_Bshift_real  = real(WT_Bshift); 
-WT_Bshift_imag  = imag(WT_Bshift); 
-
-% VECTORISES 
-% Real
-WT_I0_real_v = WT_I0_real(:); 
-WT_SO2_real_v = WT_SO2_real(:); 
-WT_O3_real_v = WT_O3_real(:); 
-WT_Ring_real_v = WT_Ring_real(:); 
-WT_Bshift_real_v = WT_Bshift_real(:); 
-% imag
-WT_I0_imag_v = WT_I0_imag(:); 
-WT_SO2_imag_v = WT_SO2_imag(:); 
-WT_O3_imag_v = WT_O3_imag(:); 
-WT_Ring_imag_v = WT_Ring_imag(:); 
-WT_Bshift_imag_v = WT_Bshift_imag(:); 
-% Combines real and imaginary part for complex magnitude 
-WT_I0_realimag = [WT_I0_real_v; WT_I0_imag_v]; 
-WT_SO2_realimag = [WT_SO2_real_v; WT_SO2_imag_v]; 
-WT_O3_realimag = [WT_O3_real_v; WT_O3_imag_v]; 
-WT_Ring_realimag = [WT_Ring_real_v; WT_Ring_imag_v]; 
-WT_Bshift_realimag = [WT_Bshift_real_v; WT_Bshift_imag_v]; 
-
-% DESIGN MATRIX, G 
-G_real = [WT_I0_real_v, WT_SO2_real_v, WT_O3_real_v, WT_Ring_real_v, WT_Bshift_real_v]; 
-G_realimag = [WT_I0_realimag, WT_SO2_realimag, WT_O3_realimag, WT_Ring_realimag, WT_Bshift_realimag]; 
-% Remove NaN 
-G_real = G_real(all(~isnan(G_real), 2),:);
-G_realimag = G_realimag(all(~isnan(G_realimag), 2),:);
-% G transponse 
-Gt_real = G_real'; 
-Gt_realimag = G_realimag'; 
-
-% SAVES variables 
-fname = fullfile(outDir, 'AppendixB');
-save(fname, 'G_real', 'G_realimag', 'Gt_real', 'Gt_realimag', 'rI', 'lambda', 'WT_I0', 'WT_SO2', 'WT_O3', 'WT_Ring', 'WT_Bshift', 'l', 'h' , 'AW_L', 'AW_H', 'AW_Ft', 'AW_Fb', 'idxCoi', 'wavL', 'wavH', 'Ft', 'Fb','idxFt', 'idxFb', 'idxL', 'idxH'); 
-
+fprintf('Convoluted trace gas cross sections and reference spectra saved in %s\n', outDir); % Displays message to user 
+ 
+% clearvars 
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END OF CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-
-
