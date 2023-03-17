@@ -1,6 +1,6 @@
 % Icarus: exploIting the frequenCy signature of trace gAs absoRption in Uv-Spectra
  
-% Appendix A: Convolution of reference spectra and trace gas cross sections 
+% (SupplementaryMaterial1) Appendix A: Convolution of reference spectra and trace gas cross sections 
 
 % This code is provided as part of Chapter 2 of the thesis 'Using Volcanic Gases to Understand Open-vent Volcanoes' submitted to the Nanyang Technological University
 % in partial fulfillment of the requirements for the degree of Doctor of Philosophy. 
