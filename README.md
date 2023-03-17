@@ -1,4 +1,4 @@
-Icarus: exploIting the frequenCy signature of trace gAs absoRption in Uv-Spectra
+# Icarus: exploIting the frequenCy signature of trace gAs absoRption in Uv-Spectra
 
 This repository contains the MATLAB code used to obtain the results presented in “Barrington et al. Exploiting the Frequency Signature of Trace Gas Absorption: A New Model to Quantify SO2 from UV Spectra of Volcanic Plumes”.
 
